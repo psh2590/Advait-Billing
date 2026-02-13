@@ -59,7 +59,7 @@ Edit `.env` file to configure:
 
 ## Support
 
-For issues or questions, contact: your-email@example.com
+For issues or questions, contact: advait.prime@gmail.com
 
 ## License
 
