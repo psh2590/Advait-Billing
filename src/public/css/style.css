@@ -53,6 +53,21 @@ body {
     gap: 1rem;
 }
 
+.btn-logout {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-logout:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
 /* Main Container */
 .main-container {
     display: grid;
@@ -341,21 +356,6 @@ body {
     background: #059669;
 }
 
-.btn-logout {
-    background: rgba(255,255,255,0.2);
-    color: white;
-    border: 1px solid white;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.btn-logout:hover {
-    background: white;
-    color: var(--primary-color);
-}
-
 .bill-actions {
     display: flex;
     gap: 10px;
@@ -462,10 +462,12 @@ body {
 .qr-actions {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .qr-actions .btn {
     flex: 1;
+    min-width: 120px;
 }
 
 /* Success Modal */
