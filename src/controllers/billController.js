@@ -1,4 +1,3 @@
-
 const db = require('../config/database');
 
 // Generate unique bill number
@@ -10,7 +9,8 @@ function generateBillNumber() {
 
 // Create new bill
 exports.createBill = (req, res) => {
-    const { cashier_id, items, discount } = req.body;
+    const { items, discount } = req.body;
+    const cashier_id = req.user.user_id;
     
     // Calculate totals
     let subtotal = 0;
@@ -18,7 +18,7 @@ exports.createBill = (req, res) => {
         subtotal += item.quantity * item.unit_price;
     });
     
-    const tax_rate = 0.05; // 5% tax
+    const tax_rate = parseFloat(process.env.TAX_RATE) || 0.05;
     const tax_amount = subtotal * tax_rate;
     const total_amount = subtotal + tax_amount - (discount || 0);
     const bill_number = generateBillNumber();
@@ -73,7 +73,13 @@ exports.createBill = (req, res) => {
 exports.getBillById = (req, res) => {
     const { id } = req.params;
     
-    const billQuery = 'SELECT * FROM bills WHERE bill_id = ?';
+    const billQuery = `
+        SELECT b.*, u.full_name as cashier_name 
+        FROM bills b
+        LEFT JOIN users u ON b.cashier_id = u.user_id
+        WHERE b.bill_id = ?
+    `;
+    
     const itemsQuery = `
         SELECT bi.*, p.name as product_name 
         FROM bill_items bi
@@ -100,20 +106,24 @@ exports.getBillById = (req, res) => {
     });
 };
 
-// Get all bills (with pagination)
+// Get all bills
 exports.getAllBills = (req, res) => {
     const { page = 1, limit = 50, status } = req.query;
     const offset = (page - 1) * limit;
     
-    let query = 'SELECT * FROM bills';
+    let query = `
+        SELECT b.*, u.full_name as cashier_name 
+        FROM bills b
+        LEFT JOIN users u ON b.cashier_id = u.user_id
+    `;
     let params = [];
     
     if (status) {
-        query += ' WHERE payment_status = ?';
+        query += ' WHERE b.payment_status = ?';
         params.push(status);
     }
     
-    query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+    query += ' ORDER BY b.created_at DESC LIMIT ? OFFSET ?';
     params.push(limit, offset);
     
     db.all(query, params, (err, rows) => {
@@ -124,7 +134,7 @@ exports.getAllBills = (req, res) => {
     });
 };
 
-// Update bill payment status
+// Update payment status
 exports.updatePaymentStatus = (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
