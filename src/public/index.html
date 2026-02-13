@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canteen Billing System</title>
+    <title>Cashier - Canteen Billing</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
         <div class="container">
             <h1>🍽️ College Canteen Billing</h1>
             <div class="user-info">
-                <span id="cashier-name">Cashier: Admin</span>
+                <span id="cashier-name">Cashier: Loading...</span>
                 <button class="btn-logout" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -36,7 +36,7 @@
             </div>
             
             <div id="products-list" class="products-list">
-                <!-- Products will be loaded here dynamically -->
+                <!-- Products will be loaded here -->
             </div>
         </div>
 
@@ -48,7 +48,6 @@
             </div>
             
             <div class="bill-items" id="bill-items">
-                <!-- Bill items will appear here -->
                 <div class="empty-bill">
                     <p>No items added yet</p>
                     <p class="hint">Click on menu items to add to bill</p>
@@ -103,6 +102,7 @@
                 <button class="btn btn-secondary" onclick="closeQRModal()">Cancel</button>
                 <button class="btn btn-success" onclick="confirmPayment()">✓ Payment Received</button>
                 <button class="btn btn-primary" onclick="printReceipt()">🖨️ Print Receipt</button>
+                <button class="btn btn-primary" onclick="sendBillViaWhatsApp()">📱 Send WhatsApp</button>
             </div>
         </div>
     </div>
