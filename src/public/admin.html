@@ -1,1 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Canteen Billing</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>🍽️ Admin Dashboard</h1>
+            <div class="user-info">
+                <span id="admin-name">Admin</span>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
 
+    <!-- Navigation -->
+    <nav class="admin-nav">
+        <button class="nav-btn active" onclick="showSection('dashboard')">📊 Dashboard</button>
+        <button class="nav-btn" onclick="showSection('products')">🍔 Products</button>
+        <button class="nav-btn" onclick="showSection('inventory')">📦 Inventory</button>
+        <button class="nav-btn" onclick="showSection('reports')">📈 Reports</button>
+        <button class="nav-btn" onclick="showSection('users')">👥 Users</button>
+    </nav>
+
+    <div class="container admin-container">
+        <!-- Dashboard Section -->
+        <section id="dashboard-section" class="admin-section active">
+            <h2>Dashboard Overview</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3>Today's Sales</h3>
+                        <p class="stat-value" id="today-sales">₹0</p>
+                        <span class="stat-label" id="today-bills">0 bills</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-info">
+                        <h3>Total Products</h3>
+                        <p class="stat-value" id="total-products">0</p>
+                        <span class="stat-label">Active items</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card warning">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-info">
+                        <h3>Low Stock</h3>
+                        <p class="stat-value" id="low-stock">0</p>
+                        <span class="stat-label">Items need restocking</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="recent-bills">
+                <h3>Recent Bills</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Bill #</th>
+                            <th>Cashier</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-bills-body">
+                        <tr><td colspan="5">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products-section" class="admin-section">
+            <div class="section-header">
+                <h2>Products Management</h2>
+                <button class="btn btn-primary" onclick="showAddProductModal()">+ Add Product</button>
+            </div>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="products-table-body">
+                    <tr><td colspan="6">Loading...</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Inventory Section -->
+        <section id="inventory-section" class="admin-section">
+            <h2>Inventory Management</h2>
+            <div id="inventory-list">
+                <p>Loading inventory...</p>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports-section" class="admin-section">
+            <h2>Sales Reports</h2>
+            
+            <div class="report-filters">
+                <label>Start Date: <input type="date" id="start-date"></label>
+                <label>End Date: <input type="date" id="end-date"></label>
+                <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+            </div>
+            
+            <div id="report-results">
+                <p>Select date range and click Generate Report</p>
+            </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users-section" class="admin-section">
+            <div class="section-header">
+                <h2>User Management</h2>
+                <button class="btn btn-primary" onclick="showAddUserModal()">+ Add User</button>
+            </div>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                        <th>Last Login</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    <tr><td colspan="6">Loading...</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="add-product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddProductModal()">&times;</span>
+            <h2>Add New Product</h2>
+            <form id="add-product-form">
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Category:</label>
+                    <select name="category" required>
+                        <option value="Beverages">Beverages</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Meals">Meals</option>
+                        <option value="Desserts">Desserts</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Price:</label>
+                    <input type="number" name="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Stock Quantity:</label>
+                    <input type="number" name="stock_quantity" required>
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea name="description"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="add-user-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddUserModal()">&times;</span>
+            <h2>Add New User</h2>
+            <form id="add-user-form">
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Full Name:</label>
+                    <input type="text" name="full_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Role:</label>
+                    <select name="role" required>
+                        <option value="cashier">Cashier</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" name="email">
+                </div>
+                <button type="submit" class="btn btn-primary">Add User</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
