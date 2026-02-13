@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const paymentController = require('../controllers/paymentController');
+const { requireAuth } = require('../middleware/auth');
 
-router.post('/generate-qr', paymentController.generateQRCode);
-router.post('/confirm', paymentController.confirmPayment);
-router.get('/history', paymentController.getPaymentHistory);
-router.get('/:payment_id', paymentController.checkPaymentStatus);
+router.post('/generate-qr', requireAuth, paymentController.generateQRCode);
+router.post('/confirm', requireAuth, paymentController.confirmPayment);
+router.get('/history', requireAuth, paymentController.getPaymentHistory);
 
 module.exports = router;
